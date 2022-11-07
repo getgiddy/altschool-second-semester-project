@@ -1,0 +1,6 @@
+---
+db_user: admin
+db_password: Passw0rd
+db_name: testdb
+user: ansible
+password: Passw0rd
