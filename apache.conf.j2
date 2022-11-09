@@ -5,18 +5,9 @@
     ErrorLog ${APACHE_LOG_DIR}/error.log
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-    RewriteEngine On
-    Alias /.well-known/acme-challenge/ "{{ acme_challenge_dir }}/"
-    RewriteRule "^/.well-known/acme-challenge/" - [L]
-    <Directory "{{ acme_challenge_dir }}/">
+    <Directory "{{ app_dir }}">
         Options Indexes MultiViews
         AllowOverride None
-        Order allow,deny
-        Allow from all
+        Require all granted
     </Directory>
-
-    <Directory {{ app_dir }}/public>
-        AllowOverride All
-    </Directory>
-    
 </VirtualHost>

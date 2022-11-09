@@ -61,7 +61,7 @@
 
     - name: Create .well-known/acme-challenge directory
       ansible.builtin.file:
-        path: "{{ acme_challenge_dir }}/.well-known/acme-challenge"
+        path: "{{ app_dir }}/public/.well-known/acme-challenge"
         state: directory
         owner: root
         group: root
@@ -70,7 +70,7 @@
     - name: Implement http-01 challenge files
       ansible.builtin.copy:
         content: "{{ acme_challenge_my_domain['challenge_data'][item]['http-01']['resource_value'] }}"
-        dest: "{{ acme_challenge_dir }}/{{ acme_challenge_my_domain['challenge_data'][item]['http-01']['resource'] }}"
+        dest: "{{ app_dir }}/public/{{ acme_challenge_my_domain['challenge_data'][item]['http-01']['resource'] }}"
         owner: root
         group: root
         mode: u=rw,g=r,o=r
