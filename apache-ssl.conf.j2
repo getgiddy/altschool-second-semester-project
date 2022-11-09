@@ -1,0 +1,28 @@
+<VirtualHost *:{{ http_port }}>
+    ServerAdmin webmaster@localhost
+    ServerName {{ http_host }}
+    
+    Redirect permanent / https://{{ http_host }}
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerAdmin webmaster@localhost
+    ServerName {{ http_host }}
+
+    Protocols h2 http/1.1
+
+    DocumentRoot {{ app_dir }}/public
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    <Directory "{{ app_dir }}">
+        Options Indexes MultiViews
+        AllowOverride None
+        Require all granted
+    </Directory>
+
+    SSLEngine on
+    SSLCertificateFile {{ cert_file }}
+    SSLCertificateKeyFile {{ cert_key }}
+    SSLCertificateChainFile {{ cert_chain }}
+</VirtualHost>

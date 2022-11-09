@@ -7,5 +7,8 @@
 - name: App configuration
   ansible.builtin.import_playbook: app.playbook.yml
 
-- name: SSL configuration
+- name: SSL Certicate Generation
   ansible.builtin.import_playbook: acme-cert-issue.playbook.yml
+
+- name: Install SSL certificate
+  ansible.builtin.import_playbook: install-ssl-cert.playbook.yml
