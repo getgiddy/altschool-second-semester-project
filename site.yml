@@ -1,0 +1,11 @@
+- name: MySQL Configuration
+  ansible.builtin.import_playbook: mysql.playbook.yml
+
+- name: Apache Configuration
+  ansible.builtin.import_playbook: apache.playbook.yml
+
+- name: App configuration
+  ansible.builtin.import_playbook: app.playbook.yml
+
+- name: SSL configuration
+  ansible.builtin.import_playbook: acme-cert-issue.playbook.yml

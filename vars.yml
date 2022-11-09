@@ -1,0 +1,26 @@
+---
+db_user: admin
+db_password: Passw0rd
+db_name: testdb
+db_connection: mysql
+db_host: localhost
+db_port: 3306
+http_host: "second-sem-project.getgiddy.xyz"
+http_conf: "second-sem-project.getgiddy.xyz.conf"
+http_port: "80"
+app_dir: "/var/www/{{ http_host }}"
+disable_default: true
+repo_url: https://github.com/f1amy/laravel-realworld-example-app.git
+app_env: production
+php_version: 8.1
+acme_challenge_type: http-01
+acme_directory: https://acme-v02.api.letsencrypt.org/directory
+acme_challenge_dir: /var/www/acme/acme-challenge
+acme_version: 2
+acme_email: "certificate-reminders@{{http_host}}"
+letsencrypt_dir: /etc/letsencrypt
+letsencrypt_keys_dir: /etc/letsencrypt/keys
+letsencrypt_csrs_dir: /etc/letsencrypt/csrs
+letsencrypt_certs_dir: /etc/letsencrypt/certs
+letsencrypt_account_key: /etc/letsencrypt/account/account.key
+domain_name: "{{ http_host }}"

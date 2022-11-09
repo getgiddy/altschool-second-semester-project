@@ -1,0 +1,42 @@
+- name: Setup MySQL
+  hosts: webservers
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Install mysql package and dependencies
+      ansible.builtin.package:
+        name:
+          - mysql-server
+          - mysql-client
+          - python3-mysqldb
+          - libmysqlclient-dev
+        update_cache: true
+        state: present
+
+    - name: Start mysql service
+      ansible.builtin.service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Create mysql user
+      community.mysql.mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "*.*:ALL,GRANT"
+      notify: Restart MySQL
+
+    - name: Create mysql DB
+      community.mysql.mysql_db:
+        name:
+          - "{{ db_name }}"
+        state: present
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+
+  handlers:
+    - name: Restart MySQL
+      ansible.builtin.service:
+        name: mysql
+        state: restarted
