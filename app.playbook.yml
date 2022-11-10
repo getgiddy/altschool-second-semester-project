@@ -14,8 +14,10 @@
           - php{{ php_version }}-mysql
           - php{{ php_version }}-xml
           - php{{ php_version }}-dev
+          - php{{ php_version }}-pdo
           - php{{ php_version }}-gd
           - php{{ php_version }}-curl
+          - unzip
         state: present
         update_cache: true
 
@@ -73,31 +75,36 @@
         recurse: true
         mode: "0777"
 
-    - name: InstallComposerDependencies
-      community.general.composer:
-        command: install
-        working_dir: "{{ app_dir }}"
-      environment:
-        COMPOSER_ALLOW_SUPERUSER: "1"
-        COMPOSER_NO_INTERACTION: "1"
+    - name: Install composer dependencies
+      ansible.builtin.shell: |
+        set -o pipefail
+        cd {{ app_dir }}
+        export COMPOSER_ALLOW_SUPERUSER=1
+        composer install --no-interaction
+      changed_when: false
+      args:
+        executable: /bin/bash
 
-    - name: Cache Config
+    - name: Run Migrations with seed
+      ansible.builtin.shell: |
+        set -o pipefail
+        cd {{ app_dir }}
+        php artisan migrate:fresh --seed --force
+      register: migrate_with_seed
+      ignore_errors: true
+      changed_when: false
+      args:
+        executable: /bin/bash
+
+    - name: Run migrations without seed (fallback)
       ansible.builtin.command:
-        cmd: php artisan config:cache
+        cmd: php artisan migrate:fresh --force
         chdir: "{{ app_dir }}"
-      register: cache_config
-      changed_when: cache_config.rc != 0
+      when: migrate_with_seed is failed
 
-    - name: Clear View Cache
+    - name: Generate app key
       ansible.builtin.command:
-        cmd: php artisan view:clear
-        chdir: "{{ app_dir }}"
-      register: clear_view_cache
-      changed_when: clear_view_cache.rc != 0
-
-    - name: Run Migrations
-      ansible.builtin.command:
-        cmd: php artisan migrate --force
+        cmd: php artisan key:generate --force
         chdir: "{{ app_dir }}"
       register: gen_key_output
-      changed_when: gen_key_output.rc != 0
+      changed_when: gen_key_output.rc == 0

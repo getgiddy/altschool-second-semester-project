@@ -3,7 +3,7 @@ db_user: admin
 db_password: Passw0rd
 db_name: testdb
 db_connection: mysql
-db_host: localhost
+db_host: 127.0.0.1
 db_port: 3306
 http_host: "second-sem-project.getgiddy.xyz"
 http_conf: "second-sem-project.getgiddy.xyz.conf"
